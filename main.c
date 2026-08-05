@@ -37,8 +37,8 @@ int get_char_count (char* buf)
 
 bool is_exit_cmd (char* buf)
 {
-  if (buf[0] == 'q') return true;
-  if (buf[0] == 'Q') return true;
+  if (buf[0] == 'q' && buf[1] == '\n') return true;
+  if (buf[0] == 'Q' && buf[1] == '\n') return true;
 
   char* exit = "exit";
   int i;
