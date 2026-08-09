@@ -40,16 +40,18 @@ int parse_input(char* input)
         printf ("\n=========\nFlag_count: %d\ncmd->flags[cmd->flag_count - 1]: %c\ninput[i]: %c\n=========\n", cmd->flag_count, cmd->flags[cmd->flag_count - 1], input[i]);
         i++;
       }
-        if (char* temp = realloc (cmd->flags, cmd->flag_count * sizeof (char)))
-        { 
-          cmd->flags = temp;
-        }
-        else 
-        {
-          printf ("There was an error allocating memory to cmd->flags.\n");
-          return -1;
-        }
-        cmd->flags[cmd->flag_count - 1] = '\n'; // otherwise, the get_char() won't find the char* length
+      
+      cmd->flag_count++;
+      if (char* temp = realloc (cmd->flags, cmd->flag_count * sizeof (char)))
+      { 
+        cmd->flags = temp;
+      }
+      else 
+      {
+        printf ("There was an error allocating memory to cmd->flags.\n");
+        return -1;
+      }
+      cmd->flags[cmd->flag_count - 1] = '\n'; // otherwise, the get_char() won't find the char* length
 
     }
 
@@ -130,7 +132,7 @@ void print_command(struct Cmd* cmd)
   {
     printf ("Flags(%d): ", get_char_count(cmd->flags));
     
-    for (int i = 0; i <= get_char_count (cmd->flags); i++)
+    for (int i = 0; i < get_char_count (cmd->flags); i++)
     {
       printf ("%c", cmd->flags[i]);
     }
