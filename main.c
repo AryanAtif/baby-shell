@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "shell_ctl.h"
+#include "cmd_execution.h"
 
 #define MAX_CMD_SIZE 100
 
@@ -17,6 +18,7 @@ int main(int argc, char** argv)
     flush (&input_cmd);
     read (STDIN_FILENO, input_cmd, MAX_CMD_SIZE);
     write (STDOUT_FILENO, input_cmd, get_char_count (input_cmd));
+    parse_input (input_cmd);
   }
 
   return 0;

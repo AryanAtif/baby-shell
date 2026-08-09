@@ -3,6 +3,19 @@
 
 #define extern MAX_CMD_SIZE 
 
-void parse_input (char* input);
+struct Cmd
+{
+  int cmd_size; 
+  char* command;
+  
+  int flag_count;
+  char* flags;
+  
+  int parameter_count;
+  char** parameter; // there can be more than one parameter
+};
+
+int parse_input (char* input);
+void print_command (struct Cmd* cmd);
 
 #endif
