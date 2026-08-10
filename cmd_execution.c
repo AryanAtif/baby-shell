@@ -59,52 +59,43 @@ int parse_input(char* input)
     else if (cmd->cmd_size != 0) // parameter; if already read the command name 
     {
       int parameter_size = 0;
-      while(input[i] != ' ' && i < cmd_length)
-      {
-        cmd->parameter_count++;
-        printf ("Paramter_count: %d\n====================\n", cmd->parameter_count);
+      cmd->parameter_count++;
 
-        if (char** temp = realloc (cmd->parameter, cmd->parameter_count * sizeof(char*)))
-        { 
-          cmd->parameter = temp;
+      if (char** temp = realloc (cmd->parameter, cmd->parameter_count * sizeof(char*)))
+      { 
+        cmd->parameter = temp;
+      }
+      else 
+      {
+        printf ("There was an error allocating memory to cmd->parameter\n");
+        return -1;
+      }
+
+      parameter_size = 0;
+
+      while (input[i] != ' ' && input[i] != '\n')
+      {
+        parameter_size++;
+        if (char* temp = realloc (*(cmd->parameter + (cmd->parameter_count - 1)), parameter_size * sizeof(char)))
+        {
+          *(cmd->parameter + (cmd->parameter_count - 1)) = temp;
         }
         else 
         {
-          printf ("There was an error allocating memory to cmd->parameter\n");
+          printf ("There was an error allocating memory to *(cmd->parameter)\n");
           return -1;
         }
 
-        printf ("inside the main while loop\n");
-        parameter_size = 0;
+        printf ("input[i]: %c\nparameter_size -1 = %d\n", input[i], parameter_size -1);
 
-        while (input[i] != ' ' && input[i] != '\n')
-        {
-          parameter_size++;
-          if (char* temp = realloc (*(cmd->parameter + (cmd->parameter_count - 1)), parameter_size * sizeof(char)))
-          {
-            *(cmd->parameter + (cmd->parameter_count - 1)) = temp;
-            printf ("allocated memory to *(cmd->parameter)\t;\ti = %d;\n", i);
-          }
-          else 
-          {
-            printf ("There was an error allocating memory to *(cmd->parameter)\n");
-            return -1;
-          }
-          
-          printf ("input[i]: %c\nparameter_size -1 = %d\n", input[i], parameter_size -1);
+        (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = input[i]; 
 
-          (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = input[i]; 
-
-          printf ("Assigned the value.\n");
-          printf ("cmd->parameter[cmd->parameter_count - 1][parameter_size-1] = %c\n", cmd->parameter[cmd->parameter_count - 1][parameter_size-1]);
-          i++;
-          printf ("increased i to %d\n", i);
-        }
-        parameter_size++;
-        (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = '\n'; 
-        
-        i++; // we should check the next character in the main loop condition
+        printf ("cmd->parameter[cmd->parameter_count - 1][parameter_size-1] = %c\n", cmd->parameter[cmd->parameter_count - 1][parameter_size-1]);
+        i++;
       }
+      parameter_size++;
+      (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = '\n'; 
+        
     }
     else  // the command name 
     {
