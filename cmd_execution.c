@@ -129,39 +129,4 @@ int parse_input(char* input)
 
     }
   }
-  print_command(cmd);
-
-}
-void print_command(struct Cmd* cmd)
-{
-  printf ("\n=====================\nsafely inside printf_command\n");
-    
-  printf ("Command: ");
-  for (int i = 0; i < get_char_count (cmd->command); i++)
-  {
-    printf ("%c", cmd->command[i]);
-  }
-  printf ("\n");
-
-  if (cmd->flag_count > 0)
-  {
-    printf ("Flags(%d): ", get_char_count(cmd->flags));
-    
-    for (int i = 0; i < get_char_count (cmd->flags); i++)
-    {
-      printf ("%c", cmd->flags[i]);
-    }
-    printf ("\n");
-  }
-  if (cmd->parameter_count > 0)
-  {
-    for (int i = 0; i < cmd->parameter_count; i++)
-    {
-      printf ("Parameter %d: ", i); 
-      for (int j = 0; j < get_char_count (cmd->parameter[i]); j++)
-        printf ("%c", cmd->parameter[i][j]);
-      printf ("\n");
-    }
-  }
-  printf ("\nQuiting print_command\n======================\n");
 }
