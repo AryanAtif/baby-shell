@@ -8,7 +8,7 @@
 #include "shell_ctl.h"
 
 
-int parse_input(char* input)
+char** parse_input(char* input)
 {
   struct Cmd* cmd = malloc (sizeof (struct Cmd));
   cmd->cmd_size = 0; 
@@ -36,7 +36,7 @@ int parse_input(char* input)
         else 
         {
           printf ("There was an error allocating memory to cmd->flags.\n");
-          return -1;
+          return NULL;
         }
 
         cmd->flags[cmd->flag_count - 1] = input[i];
@@ -52,7 +52,7 @@ int parse_input(char* input)
       else 
       {
         printf ("There was an error allocating memory to cmd->flags.\n");
-        return -1;
+        return NULL;
       }
       cmd->flags[cmd->flag_count - 1] = '\0'; // otherwise, the get_char() won't find the char* length
 
@@ -70,7 +70,7 @@ int parse_input(char* input)
       else 
       {
         printf ("There was an error allocating memory to cmd->parameter\n");
-        return -1;
+        return NULL;
       }
 
       parameter_size = 0;
@@ -85,7 +85,7 @@ int parse_input(char* input)
         else 
         {
           printf ("There was an error allocating memory to *(cmd->parameter)\n");
-          return -1;
+          return NULL;
         }
 
         printf ("input[i]: %c\nparameter_size -1 = %d\n", input[i], parameter_size -1);
@@ -111,7 +111,7 @@ int parse_input(char* input)
         else
         {
           printf ("There was an error allocating memory to cmd->command\n");
-          return -1;
+          return NULL; 
         }
         cmd->command[cmd->cmd_size - 1] = input[i];
         printf ("\n=========\ncmd_count: %d\ncmd->cmd[cmd->cmd_size - 1]: %c\ninput[i]: %c\n=========\n", cmd->cmd_size, cmd->command[cmd->cmd_size - 1], input[i]);
@@ -125,36 +125,35 @@ int parse_input(char* input)
         else
         {
           printf ("There was an error allocating memory to cmd->command\n");
-          return -1;
+          return NULL;
         }
         cmd->command[cmd->cmd_size - 1] = '\0';
-
     }
+
   }
-  if (merge_cmd(cmd)) return -1;
-  return 0;
+  return merge_cmd (cmd);
 }
-/*
-int exec_cmd ()
+
+int exec_cmd (char** cmd)
 {
   pid_t w_pid;
   pid_t child_pid = fork();
   int status;
 
-  if (pid == 0) // child process
+  if (child_pid == 0) // child process
   {
-    execvp (
+    execvp (cmd[0], cmd);
   }
-  else if (pid == -1)
+  else if (child_pid == -1)
   {
     //error
   } 
   else 
   {
     while (!(WIFEXITED(status) || WIFSIGNALED(status)))
-      w_pid = wait_pid(child_pid, status, WUNTRACED);
+      w_pid = waitpid(child_pid, &status, WUNTRACED);
   }
-}*/
+}
 
 char** merge_cmd (struct Cmd* cmd)
 {
@@ -195,6 +194,14 @@ char** merge_cmd (struct Cmd* cmd)
       new_arr[argc][j] = cmd->parameter[i][j];
     }
   }
+
+  argc++;
+  new_arr = realloc (new_arr, (argc + 1) * sizeof (char*));
+  new_arr[argc] = realloc (new_arr[argc], sizeof (char));
+  
+  new_arr[argc] = (char*) 0; 
+
+
  return new_arr;
 }
 

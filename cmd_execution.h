@@ -16,7 +16,7 @@ struct Cmd
 };
 
 char** merge_cmd (struct Cmd* cmd);
-int parse_input (char* input);
-int exec_cmd ();
+char** parse_input (char* input);
+int exec_cmd (char** cmd);
 
 #endif

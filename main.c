@@ -19,9 +19,10 @@ int main(int argc, char** argv)
     read (STDIN_FILENO, input_cmd, MAX_CMD_SIZE);
     //write (STDOUT_FILENO, input_cmd, get_char_count (input_cmd));
 
-    if (parse_input (input_cmd) == -1) return -1;
+    char** command = parse_input (input_cmd);
+    if (command == NULL) return -1;
 
-  // exec_cmd();
+    exec_cmd(command);
   }
 
   return 0;
