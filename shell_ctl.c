@@ -7,7 +7,7 @@
 int get_char_count (char* buf)
 {
   int count = 0;
-  while (buf[count] != '\n')
+  while (buf[count] != '\n' && buf[count] != '\0')
   {
     count++;
   }

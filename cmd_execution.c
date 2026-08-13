@@ -52,7 +52,7 @@ int parse_input(char* input)
         printf ("There was an error allocating memory to cmd->flags.\n");
         return -1;
       }
-      cmd->flags[cmd->flag_count - 1] = '\n'; // otherwise, the get_char() won't find the char* length
+      cmd->flags[cmd->flag_count - 1] = '\0'; // otherwise, the get_char() won't find the char* length
 
     }
 
@@ -94,7 +94,7 @@ int parse_input(char* input)
         i++;
       }
       parameter_size++;
-      (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = '\n'; 
+      (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = '\0'; 
         
     }
     else  // the command name 
@@ -125,8 +125,27 @@ int parse_input(char* input)
           printf ("There was an error allocating memory to cmd->command\n");
           return -1;
         }
-        cmd->command[cmd->cmd_size - 1] = '\n';
+        cmd->command[cmd->cmd_size - 1] = '\0';
 
     }
+  }
+  return 0;
+}
+
+int exec_cmd ()
+{
+  pid_t pid = fork();
+
+  if (pid == 0) // child process
+  {
+    
+  }
+  else if (pid == -1)
+  {
+    //error
+  } 
+  else 
+  {
+    wait_pid(pid);
   }
 }

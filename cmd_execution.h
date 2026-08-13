@@ -16,6 +16,6 @@ struct Cmd
 };
 
 int parse_input (char* input);
-void print_command (struct Cmd* cmd, int cmd_length);
+int exec_cmd ();
 
 #endif
