@@ -15,7 +15,7 @@ struct Cmd
   char** parameter; // there can be more than one parameter
 };
 
-char** merge_arr (char* flags, int flag_count, char** parameters, int parameter_count);
+char** merge_cmd (struct Cmd* cmd);
 int parse_input (char* input);
 int exec_cmd ();
 

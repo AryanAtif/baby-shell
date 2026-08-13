@@ -20,8 +20,8 @@ int main(int argc, char** argv)
     //write (STDOUT_FILENO, input_cmd, get_char_count (input_cmd));
 
     if (parse_input (input_cmd) == -1) return -1;
-    
-   // exec_cmd();
+
+  // exec_cmd();
   }
 
   return 0;

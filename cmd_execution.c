@@ -131,7 +131,7 @@ int parse_input(char* input)
 
     }
   }
-  merge_arr(cmd->flags, cmd->flag_count, cmd->parameter, cmd->parameter_count);
+  if (merge_cmd(cmd)) return -1;
   return 0;
 }
 /*
@@ -156,32 +156,45 @@ int exec_cmd ()
   }
 }*/
 
-char** merge_arr (char* flags, int flag_count, char** parameters, int parameter_count)
+char** merge_cmd (struct Cmd* cmd)
 {
-  int argv = 0;
+  int argc = 0;
   char** new_arr = malloc(sizeof(char*));
-  *new_arr = malloc(sizeof(char));
+  *new_arr = malloc(sizeof(char) * cmd->cmd_size);
 
-  printf ("%c", new_arr[argv][0]);
+  if (cmd->cmd_size > 0)
+  {
+    for (int i = 0; i < cmd->cmd_size; i++)
+    {
+      new_arr[argc][i] = cmd->command[i];
+    }
+    argc++;
+
+    new_arr = realloc (new_arr, (argc + 1) * sizeof (char*));
+    new_arr[argc] = realloc (new_arr[argc], sizeof (char));
+  }
+  else return NULL;
 
   // copy the flags into new_arr
-  for (int i = 0; i < flag_count; i++)
+  if (cmd->flag_count > 0) new_arr[argc][0] = '-';
+  for (int i = 0; i < cmd->flag_count; i++)
   {
-    new_arr[argv][i+1] = flags[i];
+    new_arr[argc] = realloc (new_arr[argc], (i + 1) * sizeof (char));
+    new_arr[argc][i+1] = cmd->flags[i];
   }
 
   // copy the parameters into new_arr
-  for (int i = 0; i < parameter_count; i++)
+  for (int i = 0; i < cmd->parameter_count; i++)
   {
-    argv++;
-    new_arr = realloc (new_arr, (argv + 1) * sizeof (char*));
+    argc++;
+    new_arr = realloc (new_arr, (argc + 1) * sizeof (char*));
 
-    for (int j = 0; parameters[i][j] != '\0'; j++)
+    for (int j = 0; cmd->parameter[i][j] != '\0'; j++)
     {
-      new_arr[argv] = realloc (new_arr[argv], (j + 1) * sizeof (char*));
-      new_arr[argv][j] = parameters[i][j];
+      new_arr[argc] = realloc (new_arr[argc], (j + 1) * sizeof (char));
+      new_arr[argc][j] = cmd->parameter[i][j];
     }
   }
-  return new_arr;
+ return new_arr;
 }
 
