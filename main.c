@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 
     if (parse_input (input_cmd) == -1) return -1;
     
-   // exec();
+   // exec_cmd();
   }
 
   return 0;

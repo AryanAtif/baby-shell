@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "cmd_execution.h"
 #include "shell_ctl.h"
@@ -129,16 +131,19 @@ int parse_input(char* input)
 
     }
   }
+  merge_arr(cmd->flags, cmd->flag_count, cmd->parameter, cmd->parameter_count);
   return 0;
 }
-
+/*
 int exec_cmd ()
 {
-  pid_t pid = fork();
+  pid_t w_pid;
+  pid_t child_pid = fork();
+  int status;
 
   if (pid == 0) // child process
   {
-    
+    execvp (
   }
   else if (pid == -1)
   {
@@ -146,6 +151,37 @@ int exec_cmd ()
   } 
   else 
   {
-    wait_pid(pid);
+    while (!(WIFEXITED(status) || WIFSIGNALED(status)))
+      w_pid = wait_pid(child_pid, status, WUNTRACED);
   }
+}*/
+
+char** merge_arr (char* flags, int flag_count, char** parameters, int parameter_count)
+{
+  int argv = 0;
+  char** new_arr = malloc(sizeof(char*));
+  *new_arr = malloc(sizeof(char));
+
+  printf ("%c", new_arr[argv][0]);
+
+  // copy the flags into new_arr
+  for (int i = 0; i < flag_count; i++)
+  {
+    new_arr[argv][i+1] = flags[i];
+  }
+
+  // copy the parameters into new_arr
+  for (int i = 0; i < parameter_count; i++)
+  {
+    argv++;
+    new_arr = realloc (new_arr, (argv + 1) * sizeof (char*));
+
+    for (int j = 0; parameters[i][j] != '\0'; j++)
+    {
+      new_arr[argv] = realloc (new_arr[argv], (j + 1) * sizeof (char*));
+      new_arr[argv][j] = parameters[i][j];
+    }
+  }
+  return new_arr;
 }
+
