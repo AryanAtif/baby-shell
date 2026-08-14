@@ -14,8 +14,9 @@ int main(int argc, char** argv)
 
   while (!is_exit_cmd(input_cmd))
   {
-    write (STDOUT_FILENO, "> ", 2);
     flush (&input_cmd);
+    write (STDOUT_FILENO, "> ", 2);
+    //flush (&input_cmd);
     read (STDIN_FILENO, input_cmd, MAX_CMD_SIZE);
     //write (STDOUT_FILENO, input_cmd, get_char_count (input_cmd));
 

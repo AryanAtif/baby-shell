@@ -167,15 +167,18 @@ char** merge_cmd (struct Cmd* cmd)
     {
       new_arr[argc][i] = cmd->command[i];
     }
-    argc++;
-
-    new_arr = realloc (new_arr, (argc + 1) * sizeof (char*));
-    new_arr[argc] = realloc (new_arr[argc], sizeof (char));
   }
   else return NULL;
 
   // copy the flags into new_arr
-  if (cmd->flag_count > 0) new_arr[argc][0] = '-';
+  if (cmd->flag_count > 0)
+  {
+    argc++;
+
+    new_arr = realloc (new_arr, (argc + 1) * sizeof (char*));
+    new_arr[argc] = realloc (new_arr[argc], sizeof (char));
+    new_arr[argc][0] = '-';
+  }
   for (int i = 0; i < cmd->flag_count; i++)
   {
     new_arr[argc] = realloc (new_arr[argc], (i + 1) * sizeof (char));
@@ -183,6 +186,7 @@ char** merge_cmd (struct Cmd* cmd)
   }
 
   // copy the parameters into new_arr
+  printf ("parameter count: %d\n", cmd->parameter_count);
   for (int i = 0; i < cmd->parameter_count; i++)
   {
     argc++;
@@ -200,7 +204,6 @@ char** merge_cmd (struct Cmd* cmd)
   new_arr[argc] = realloc (new_arr[argc], sizeof (char));
   
   new_arr[argc] = (char*) 0; 
-
 
  return new_arr;
 }
