@@ -150,8 +150,11 @@ int exec_cmd (char** cmd)
   } 
   else 
   {
-    while (!(WIFEXITED(status) || WIFSIGNALED(status)))
-      w_pid = waitpid(child_pid, &status, WUNTRACED);
+    do
+    {
+      w_pid = waitpid(child_pid, &status,  WUNTRACED);
+    }
+    while (!(WIFEXITED(status) || WIFSIGNALED(status)));
   }
 }
 
