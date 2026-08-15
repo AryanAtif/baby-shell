@@ -81,8 +81,7 @@ char** parse_input(char* input)
         if (char* temp = realloc (*(cmd->parameter + (cmd->parameter_count - 1)), parameter_size * sizeof(char)))
         {
           *(cmd->parameter + (cmd->parameter_count - 1)) = temp;
-        }
-        else 
+        } else 
         {
           printf ("There was an error allocating memory to *(cmd->parameter)\n");
           return NULL;
@@ -139,10 +138,47 @@ int exec_cmd (char** cmd)
   pid_t w_pid;
   pid_t child_pid = fork();
   int status;
-
+  
+  printf ("cmd = %s\n", cmd[0]);
   if (child_pid == 0) // child process
   {
-    execvp (cmd[0], cmd);
+    if (strcmp(cmd[0], "cd") == 0)
+    { 
+      char* dir = NULL;
+      if (cmd[1][0] == '~')
+      {
+        dir = concat(dir, cmd[1]);
+  /*      concat (&dir, getenv("HOME"));
+        char* home = getenv ("HOME");
+        int length_home = strlen(home);
+        dir = realloc (dir, (length_home) * sizeof(char));
+        memcpy(dir, home, length_home);
+        print_str (dir, length_home);
+
+        for (int i = 1; i <= strlen (cmd[1]); i++)
+        {
+          printf ("inside the loop\n i = %d\nstrlen(cmd[1]) = %d\nlength_Home+1 = %d\n", i, strlen(cmd[1]), length_home+i);
+          if (char* temp = realloc (dir, (length_home + i) * sizeof(char))) dir = temp;
+
+          dir[length_home + i] = cmd[1][i];
+          print_str (dir, length_home + i);
+        } printf ("\n"); */
+      print_str (dir, strlen(getenv("HOME")) + strlen(cmd[1]));
+      } 
+      else
+      { printf ("inside else (cd)\n");
+        dir = cmd[1];
+      }
+
+      printf ("cd: %d\n", chdir(dir));
+      perror(NULL);
+      printf ("Out of the loop\n");
+    }
+    else 
+    {
+      printf ("Inside exec\n");
+      execvp (cmd[0], cmd);
+    }
   }
   else if (child_pid == -1)
   {
@@ -210,4 +246,30 @@ char** merge_cmd (struct Cmd* cmd)
 
  return new_arr;
 }
+void print_str (char* str, int length)
+{
+  for (int i =0; i < length; i++)
+    printf ("%c", str[i]);
+  printf ("\n");
+}
 
+char* concat (char* dst, char* src)
+{
+  char* home = getenv ("HOME");
+  int length_home = strlen(home);
+  dst = realloc (dst, (length_home) * sizeof(char));
+  memcpy(dst, home, length_home);
+  print_str (dst, length_home);
+
+  for (int i = 1; i <= strlen (src); i++)
+  {
+    printf ("inside the loop\n i = %d\nstrlen(src) = %d\nlength_Home+1 = %d\n", i, strlen(src), length_home+i);
+    if (char* temp = realloc (dst, (length_home + i) * sizeof(char))) dst = temp;
+    else perror(NULL);
+
+    dst[length_home + i] = src[i];
+    print_str (dst, length_home + i);
+  } printf ("\n"); 
+
+  return dst;
+}
