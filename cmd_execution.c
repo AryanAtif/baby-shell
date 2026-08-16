@@ -40,7 +40,6 @@ char** parse_input(char* input)
         }
 
         cmd->flags[cmd->flag_count - 1] = input[i];
-        printf ("\n=========\nFlag_count: %d\ncmd->flags[cmd->flag_count - 1]: %c\ninput[i]: %c\n=========\n", cmd->flag_count, cmd->flags[cmd->flag_count - 1], input[i]);
         i++;
       }
       
@@ -87,11 +86,7 @@ char** parse_input(char* input)
           return NULL;
         }
 
-        printf ("input[i]: %c\nparameter_size -1 = %d\n", input[i], parameter_size -1);
-
         (cmd->parameter)[cmd->parameter_count - 1][parameter_size - 1] = input[i]; 
-
-        printf ("cmd->parameter[cmd->parameter_count - 1][parameter_size-1] = %c\n", cmd->parameter[cmd->parameter_count - 1][parameter_size-1]);
         i++;
       }
       parameter_size++;
@@ -113,7 +108,6 @@ char** parse_input(char* input)
           return NULL; 
         }
         cmd->command[cmd->cmd_size - 1] = input[i];
-        printf ("\n=========\ncmd_count: %d\ncmd->cmd[cmd->cmd_size - 1]: %c\ninput[i]: %c\n=========\n", cmd->cmd_size, cmd->command[cmd->cmd_size - 1], input[i]);
         i++;
       }
         cmd->cmd_size++;
@@ -139,7 +133,6 @@ int exec_cmd (char** cmd)
   pid_t child_pid = fork();
   int status;
   
-  printf ("cmd = %s\n", cmd[0]);
   if (child_pid == 0) // child process
   {
     if (strcmp(cmd[0], "cd") == 0)
@@ -148,15 +141,17 @@ int exec_cmd (char** cmd)
       if (cmd[1][0] == '~')
       {
         dir = concat(dir, cmd[1]);
-        print_str (dir, strlen(getenv("HOME")) + strlen(cmd[1]));
       } 
       else
-      { printf ("inside else (cd)\n");
+      {
         dir = cmd[1];
       }
       printf ("cd: %d\n", chdir(dir));
       perror(NULL);
-      printf ("Out of the loop\n");
+    }
+    else if (strcmp(cmd[0], "exit") == 0 || strcmp(cmd[0], "q") == 0 || strcmp(cmd[0], "Q") == 0)
+    {
+      return 0;
     }
     else 
     {
@@ -208,7 +203,6 @@ char** merge_cmd (struct Cmd* cmd)
   }
 
   // copy the parameters into new_arr
-  printf ("parameter count: %d\n", cmd->parameter_count);
   for (int i = 0; i < cmd->parameter_count; i++)
   {
     argc++;
@@ -242,17 +236,14 @@ char* concat (char* dst, char* src)
   int length_home = strlen(home);
   dst = realloc (dst, (length_home) * sizeof(char));
   memcpy(dst, home, length_home);
-  print_str (dst, length_home);
 
   for (int i = 1; i <= strlen (src); i++)
   {
-    printf ("inside the loop\n i = %d\nstrlen(src) = %d\nlength_Home+1 = %d\n", i, strlen(src), length_home+i);
     if (char* temp = realloc (dst, (length_home + i) * sizeof(char))) dst = temp;
     else perror(NULL);
 
     dst[length_home + i - 1] = src[i];
-    print_str (dst, length_home + i);
-  } printf ("\n"); 
+  }  
 
   return dst;
 }
