@@ -148,35 +148,18 @@ int exec_cmd (char** cmd)
       if (cmd[1][0] == '~')
       {
         dir = concat(dir, cmd[1]);
-  /*      concat (&dir, getenv("HOME"));
-        char* home = getenv ("HOME");
-        int length_home = strlen(home);
-        dir = realloc (dir, (length_home) * sizeof(char));
-        memcpy(dir, home, length_home);
-        print_str (dir, length_home);
-
-        for (int i = 1; i <= strlen (cmd[1]); i++)
-        {
-          printf ("inside the loop\n i = %d\nstrlen(cmd[1]) = %d\nlength_Home+1 = %d\n", i, strlen(cmd[1]), length_home+i);
-          if (char* temp = realloc (dir, (length_home + i) * sizeof(char))) dir = temp;
-
-          dir[length_home + i] = cmd[1][i];
-          print_str (dir, length_home + i);
-        } printf ("\n"); */
-      print_str (dir, strlen(getenv("HOME")) + strlen(cmd[1]));
+        print_str (dir, strlen(getenv("HOME")) + strlen(cmd[1]));
       } 
       else
       { printf ("inside else (cd)\n");
         dir = cmd[1];
       }
-
       printf ("cd: %d\n", chdir(dir));
       perror(NULL);
       printf ("Out of the loop\n");
     }
     else 
     {
-      printf ("Inside exec\n");
       execvp (cmd[0], cmd);
     }
   }
@@ -267,7 +250,7 @@ char* concat (char* dst, char* src)
     if (char* temp = realloc (dst, (length_home + i) * sizeof(char))) dst = temp;
     else perror(NULL);
 
-    dst[length_home + i] = src[i];
+    dst[length_home + i - 1] = src[i];
     print_str (dst, length_home + i);
   } printf ("\n"); 
 
